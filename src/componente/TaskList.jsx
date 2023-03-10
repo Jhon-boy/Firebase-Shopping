@@ -69,7 +69,7 @@ const TaskList = () => {
                     onChange={(e) => setTask({ ...task, description: e.target.value })}
                 />
                 <button className='bg-sky-500 rounded shadow py-1 hover:bg-sky-800 font-semibold transition'
-                    onClick={() => mode ==='add'? addNewTask(): updateExistingTask() }
+                    onClick={() => mode ==='add'? createNewTask(): updateExistingTask() }
                 > {mode === 'add' ? "Añadir" : "actualizar"}</button>
             </div>
             {/* <button
