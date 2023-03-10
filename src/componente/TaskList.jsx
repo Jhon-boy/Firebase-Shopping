@@ -1,6 +1,7 @@
-import { async } from '@firebase/util';
-import React, { useState, useEffect } from 'react';
-import { addNewTask, deleteTask, getTask, updateTask} from '../firebase/taskController';
+
+import React, { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../App';
+import { addNewTask, deleteTask, getTask, updateTask } from '../firebase/taskController';
 
 const task = {
     title: 'Esta es la descripcion',
@@ -14,10 +15,12 @@ const TaskList = () => {
     const [tasks, setTasks] = useState([]);
     const [mode, setMode] = useState('add');
 
+    const { user } = useContext(AppContext);
+
     const createNewTask = async () => {
         //Funcion asincrona
         console.log(task);
-        await addNewTask(task)
+        await addNewTask(task).catch(e => alert('Deberia logearse'));
         setTask({ title: '', description: '' });
         initializeTasks();
     }
@@ -29,11 +32,11 @@ const TaskList = () => {
 
     const editTask = (id) => {
         setMode('update');
-        const taskToEdit  = tasks.find(t => t.id === id);
-        setTask({...taskToEdit});
+        const taskToEdit = tasks.find(t => t.id === id);
+        setTask({ ...taskToEdit });
     }
 
-    const remoreTask = async (id) =>{
+    const remoreTask = async (id) => {
         await deleteTask(id);
         initializeTasks();
     }
@@ -68,8 +71,9 @@ const TaskList = () => {
                     placeholder='Descripción'
                     onChange={(e) => setTask({ ...task, description: e.target.value })}
                 />
-                <button className='bg-sky-500 rounded shadow py-1 hover:bg-sky-800 font-semibold transition'
-                    onClick={() => mode ==='add'? createNewTask(): updateExistingTask() }
+                <button className='bg-sky-500 rounded shadow py-1 hover:bg-sky-800 font-semibold transition disabled:bg-sky-200'
+                    disabled={!user}
+                    onClick={() => mode === 'add' ? createNewTask() : updateExistingTask()}
                 > {mode === 'add' ? "Añadir" : "actualizar"}</button>
             </div>
             {/* <button
@@ -85,16 +89,17 @@ const TaskList = () => {
                         <p> {task.description}</p>
                         <div className='flex justify-between'>
                             <button className='bg-sky-400 text-white px-2 rounded'
-                            onClick={() =>{editTask(task.id)}}
+                                onClick={() => { editTask(task.id) }}
                             >Editar</button>
                             <button className='bg-red-600 text-white px-2 rounded'
-                            onClick={() => window.confirm('¿Estas seguro de eliminar esta tarea?') && remoreTask(task.id)}
+                                onClick={() => window.confirm('¿Estas seguro de eliminar esta tarea?') && remoreTask(task.id)}
                             >Eliminar</button>
                         </div>
 
                     </div>
                 ))}
             </div>
+            {!user && <p className='text-red-600'>Necesitas estar logeado</p>}
         </div>
     );
 }
