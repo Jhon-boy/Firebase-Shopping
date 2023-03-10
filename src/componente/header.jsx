@@ -24,7 +24,7 @@ const Header = () => {
         <header className="h-20 w-full bg-gray-100 shadow-lg flex items-center justify-between px-8">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRoute('Home')}>
                 <BsFire className="text-2xl font-semibold text-pink-600" />
-                <span className='text-3xl  font-bold text-sky-800'>John's Team</span>
+                <span className='text-3xl  font-bold text-sky-800'>John's Team 2.0.0</span>
             </div>
             <div className='flex gap-2'>
                 {user ? (
